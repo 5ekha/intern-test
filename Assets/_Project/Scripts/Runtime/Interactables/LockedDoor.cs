@@ -46,7 +46,6 @@ namespace ProjectName.Runtime.Interactables
             m_IsOpen = true;
             Debug.Log("<color=cyan>Door is open!</color>");
 
-            // Destroy or animate the door opening
             transform.Translate(Vector3.up * 3f);
         }
         #endregion
