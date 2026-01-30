@@ -13,6 +13,16 @@ namespace ProjectName.Runtime.Interactables
         #region Interface Implementations
         string IInteractable.InteractionPrompt => m_IsOpen ? "" : "Open the Door [E]";
 
+        public void OnDeselect()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnSelect()
+        {
+            throw new System.NotImplementedException();
+        }
+
         bool IInteractable.Interact()
         {
             if (m_IsOpen) return false;

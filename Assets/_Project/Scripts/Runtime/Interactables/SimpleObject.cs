@@ -8,11 +8,20 @@ namespace ProjectName.Runtime.Interactables
         // Explicit implementation (Dokümandaki kural)
         string IInteractable.InteractionPrompt => "Press 'E' to interact";
 
+        public void OnDeselect()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnSelect()
+        {
+            throw new System.NotImplementedException();
+        }
+
         bool IInteractable.Interact()
         {
             Debug.Log("<color=green>Success!</color> Interacted with the object.");
 
-            // Görsel bir geri bildirim için rengini deðiþtirelim
             GetComponent<Renderer>().material.color = Random.ColorHSV();
 
             return true;

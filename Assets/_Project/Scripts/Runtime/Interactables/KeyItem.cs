@@ -12,6 +12,16 @@ namespace ProjectName.Runtime.Interactables
         #region Interface Implementations
         string IInteractable.InteractionPrompt => "Take the key [E]";
 
+        public void OnDeselect()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnSelect()
+        {
+            throw new System.NotImplementedException();
+        }
+
         bool IInteractable.Interact()
         {
             PlayerInventory inventory = FindFirstObjectByType<PlayerInventory>();
