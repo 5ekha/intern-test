@@ -39,7 +39,7 @@ namespace ProjectName.Runtime.Interactables
             return true;
         }
 
-        public void OnSelect() { /* Glow Effect */ }
-        public void OnDeselect() { /* Remove Glow */ }
+        public void OnSelect() {}
+        public void OnDeselect() {}
     }
 }

@@ -5,7 +5,7 @@ namespace ProjectName.Runtime.Interactables
     public class SimpleObject : MonoBehaviour, IInteractable
     {
         #region Interface Implementations
-        // Explicit implementation (Dokümandaki kural)
+       
         string IInteractable.InteractionPrompt => "Press 'E' to interact";
 
         public void OnDeselect()

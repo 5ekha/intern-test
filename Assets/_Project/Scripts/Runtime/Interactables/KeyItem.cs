@@ -29,7 +29,7 @@ namespace ProjectName.Runtime.Interactables
             if (inventory != null)
             {
                 inventory.AddKey(m_KeyID);
-                Destroy(gameObject); // Destroys upon being taken
+                Destroy(gameObject);
                 return true;
             }
             return false;

@@ -38,14 +38,14 @@ namespace ProjectName.Runtime.Player
                 if (hit.collider.TryGetComponent(out IInteractable interactable))
                 {
                     m_CurrentInteractable = interactable;
-                    // Update UI with the prompt from the interface
+                   
                     m_InteractionUI?.UpdatePrompt(m_CurrentInteractable.InteractionPrompt);
                     return;
                 }
             }
 
             m_CurrentInteractable = null;
-            // Clear UI if nothing is hit
+            
             m_InteractionUI?.UpdatePrompt(string.Empty);
         }
 
@@ -57,7 +57,7 @@ namespace ProjectName.Runtime.Player
                 return;
             }
 
-            // Check if the current object is a LootChest (to use Hold Logic)
+            
             if (m_CurrentInteractable is LootChest chest)
             {
                 if (Input.GetKey(KeyCode.E))
@@ -65,7 +65,7 @@ namespace ProjectName.Runtime.Player
                     m_HoldTimer += Time.deltaTime;
                     float progress = m_HoldTimer / chest.HoldDuration;
 
-                    // Update UI Slider
+                    
                     m_InteractionUI?.UpdateProgress(progress);
 
                     if (m_HoldTimer >= chest.HoldDuration)
@@ -79,7 +79,7 @@ namespace ProjectName.Runtime.Player
                     ResetHold();
                 }
             }
-            else // Normal "Single Click" Interaction
+            else 
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {

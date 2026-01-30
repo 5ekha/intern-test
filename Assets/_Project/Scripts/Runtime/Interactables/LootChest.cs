@@ -40,7 +40,7 @@ namespace ProjectName.Runtime.Interactables
         public bool Interact()
         {
             if (m_IsOpened) return false;
-            StopSearching(); // Stop the loop when finished
+            StopSearching();
 
             if (m_AudioSource != null && m_OpenSound != null)
                 m_AudioSource.PlayOneShot(m_OpenSound);
