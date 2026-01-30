@@ -9,38 +9,50 @@ namespace ProjectName.Runtime.Player
         [SerializeField] private LayerMask m_InteractableLayer;
 
         private IInteractable m_CurrentInteractable;
+        private InteractionUI m_InteractionUI; // New reference
         #endregion
 
         #region Unity Methods
+        private void Awake()
+        {
+            // Cache the UI component
+            m_InteractionUI = Object.FindFirstObjectByType<InteractionUI>();
+        }
+
         private void Update()
         {
             CheckForInteractable();
-
-            if (m_CurrentInteractable != null && Input.GetKeyDown(KeyCode.E))
-            {
-                m_CurrentInteractable.Interact();
-            }
+            HandleInteractionInput();
         }
         #endregion
 
         #region Private Methods
         private void CheckForInteractable()
         {
-            // Kameranýn merkezinden ileriye ýþýn atar
-            Ray r_ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
-            if (Physics.Raycast(r_ray, out RaycastHit hit, m_InteractionDistance, m_InteractableLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit, m_InteractionDistance, m_InteractableLayer))
             {
-                // TryGetComponent performansý yüksektir ve null check yapar
                 if (hit.collider.TryGetComponent(out IInteractable interactable))
                 {
                     m_CurrentInteractable = interactable;
-                    Debug.Log($"Object you are facing: {m_CurrentInteractable.InteractionPrompt}");
+                    // Update UI with the prompt from the interface
+                    m_InteractionUI?.UpdatePrompt(m_CurrentInteractable.InteractionPrompt);
                     return;
                 }
             }
 
             m_CurrentInteractable = null;
+            // Clear UI if nothing is hit
+            m_InteractionUI?.UpdatePrompt(string.Empty);
+        }
+
+        private void HandleInteractionInput()
+        {
+            if (m_CurrentInteractable != null && Input.GetKeyDown(KeyCode.E))
+            {
+                m_CurrentInteractable.Interact();
+            }
         }
         #endregion
     }
