@@ -1,30 +1,35 @@
 using UnityEngine;
+using UnityEngine.UI; 
 using TMPro;
 
-namespace ProjectName.Runtime.Player
+namespace ProjectName.Runtime.UI
 {
     public class InteractionUI : MonoBehaviour
     {
-        #region Fields
         [SerializeField] private TextMeshProUGUI m_PromptText;
-        #endregion
+        [SerializeField] private Slider m_ProgressBar; 
 
-        #region Public Methods
-       
-        /// Updates the HUD text. If the prompt is empty, the text is hidden.
-       
-        public void UpdatePrompt(string prompt)
+        public void UpdatePrompt(string message)
         {
-            if (string.IsNullOrEmpty(prompt))
+            m_PromptText.text = message;
+        }
+
+        
+        public void UpdateProgress(float value)
+        {
+            if (m_ProgressBar == null) return;
+
+            
+            if (value > 0f && value < 1f)
             {
-                m_PromptText.gameObject.SetActive(false);
+                m_ProgressBar.gameObject.SetActive(true);
+                m_ProgressBar.value = value;
             }
             else
             {
-                m_PromptText.gameObject.SetActive(true);
-                m_PromptText.text = prompt;
+                m_ProgressBar.gameObject.SetActive(false);
+                m_ProgressBar.value = 0f;
             }
         }
-        #endregion
     }
 }

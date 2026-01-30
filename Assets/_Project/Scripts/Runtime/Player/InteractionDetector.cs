@@ -1,3 +1,5 @@
+using ProjectName.Runtime.Interactables;
+using ProjectName.Runtime.UI;
 using UnityEngine;
 
 namespace ProjectName.Runtime.Player
@@ -7,15 +9,15 @@ namespace ProjectName.Runtime.Player
         #region Fields
         [SerializeField] private float m_InteractionDistance = 3.0f;
         [SerializeField] private LayerMask m_InteractableLayer;
+        private float m_HoldTimer = 0f;
 
         private IInteractable m_CurrentInteractable;
-        private InteractionUI m_InteractionUI; // New reference
+        private InteractionUI m_InteractionUI; 
         #endregion
 
         #region Unity Methods
         private void Awake()
         {
-            // Cache the UI component
             m_InteractionUI = Object.FindFirstObjectByType<InteractionUI>();
         }
 
@@ -49,11 +51,49 @@ namespace ProjectName.Runtime.Player
 
         private void HandleInteractionInput()
         {
-            if (m_CurrentInteractable != null && Input.GetKeyDown(KeyCode.E))
+            if (m_CurrentInteractable == null)
             {
-                m_CurrentInteractable.Interact();
+                ResetHold();
+                return;
+            }
+
+            // Check if the current object is a LootChest (to use Hold Logic)
+            if (m_CurrentInteractable is LootChest chest)
+            {
+                if (Input.GetKey(KeyCode.E))
+                {
+                    m_HoldTimer += Time.deltaTime;
+                    float progress = m_HoldTimer / chest.HoldDuration;
+
+                    // Update UI Slider
+                    m_InteractionUI?.UpdateProgress(progress);
+
+                    if (m_HoldTimer >= chest.HoldDuration)
+                    {
+                        m_CurrentInteractable.Interact();
+                        ResetHold();
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.E))
+                {
+                    ResetHold();
+                }
+            }
+            else // Normal "Single Click" Interaction
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    m_CurrentInteractable.Interact();
+                }
             }
         }
+
+        private void ResetHold()
+        {
+            m_HoldTimer = 0f;
+            m_InteractionUI?.UpdateProgress(0f);
+        }
         #endregion
+
     }
 }
