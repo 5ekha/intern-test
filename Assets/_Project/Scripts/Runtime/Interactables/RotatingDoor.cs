@@ -9,6 +9,11 @@ namespace ProjectName.Runtime.Interactables
         [SerializeField] private float m_OpenAngle = 90f;
         [SerializeField] private float m_Speed = 2f;
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource m_AudioSource;
+        [SerializeField] private AudioClip m_OpenSound;
+        [SerializeField] private AudioClip m_CloseSound;
+
         private bool m_IsOpen = false;
         private bool m_IsMoving = false;
 
@@ -17,10 +22,10 @@ namespace ProjectName.Runtime.Interactables
 
         private void Awake()
         {
-            
             m_ClosedRotation = transform.localRotation;
-            
             m_OpenRotation = m_ClosedRotation * Quaternion.Euler(0, m_OpenAngle, 0);
+
+            if (m_AudioSource == null) m_AudioSource = GetComponent<AudioSource>();
         }
 
         public string InteractionPrompt => m_IsOpen ? "Close Door [E]" : "Open Door [E]";
@@ -30,6 +35,14 @@ namespace ProjectName.Runtime.Interactables
             if (m_IsMoving) return false;
 
             m_IsOpen = !m_IsOpen;
+
+           
+            AudioClip clipToPlay = m_IsOpen ? m_OpenSound : m_CloseSound;
+            if (m_AudioSource != null && clipToPlay != null)
+            {
+                m_AudioSource.PlayOneShot(clipToPlay);
+            }
+
             StopAllCoroutines();
             StartCoroutine(AnimateRotation(m_IsOpen ? m_OpenRotation : m_ClosedRotation));
             return true;
@@ -53,7 +66,7 @@ namespace ProjectName.Runtime.Interactables
             m_IsMoving = false;
         }
 
-        public void OnSelect() {}
-        public void OnDeselect() {}
+        public void OnSelect() { }
+        public void OnDeselect() { }
     }
 }

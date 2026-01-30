@@ -6,6 +6,12 @@ namespace ProjectName.Runtime.Interactables
 {
     public class LockedRotatingDoor : MonoBehaviour, IInteractable
     {
+        [Header("Audio")]
+        [SerializeField] private AudioSource m_AudioSource;
+        [SerializeField] private AudioClip m_OpenSound;
+        [SerializeField] private AudioClip m_CloseSound;
+        [SerializeField] private AudioClip m_LockedLockedSound;
+
         [Header("Key Settings")]
         [SerializeField] private string m_RequiredKeyId = "Level1_Key";
 
@@ -39,29 +45,37 @@ namespace ProjectName.Runtime.Interactables
         {
             if (m_IsMoving) return false;
 
-            
             if (m_IsLocked)
             {
-                
                 var inventory = Object.FindFirstObjectByType<PlayerInventory>();
-
                 if (inventory != null && inventory.HasKey(m_RequiredKeyId))
                 {
                     m_IsLocked = false;
-                    Debug.Log("<color=green>[Door]:</color> Unlocked!");
+                    
                 }
                 else
                 {
-                    Debug.Log("<color=red>[Door]:</color> Still locked...");
-                    return false; 
+                    PlaySound(m_LockedLockedSound); 
+                    return false;
                 }
             }
 
-            
             m_IsOpen = !m_IsOpen;
+
+            
+            PlaySound(m_IsOpen ? m_OpenSound : m_CloseSound);
+
             StopAllCoroutines();
             StartCoroutine(AnimateRotation(m_IsOpen ? m_OpenRotation : m_ClosedRotation));
             return true;
+        }
+
+        private void PlaySound(AudioClip clip)
+        {
+            if (m_AudioSource != null && clip != null)
+            {
+                m_AudioSource.PlayOneShot(clip);
+            }
         }
 
         private IEnumerator AnimateRotation(Quaternion target)

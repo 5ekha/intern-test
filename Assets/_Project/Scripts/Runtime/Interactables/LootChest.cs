@@ -13,9 +13,38 @@ namespace ProjectName.Runtime.Interactables
         public float HoldDuration => m_HoldDuration;
 
         public string InteractionPrompt => m_IsOpened ? "" : "Hold [E] to Search Chest";
+        
+        [Header("Audio")]
+        [SerializeField] private AudioSource m_AudioSource;
+        [SerializeField] private AudioClip m_SearchLoop;
+        [SerializeField] private AudioClip m_OpenSound;
+
+        public void StartSearching()
+        {
+            if (m_IsOpened || m_AudioSource == null || m_SearchLoop == null) return;
+
+            m_AudioSource.clip = m_SearchLoop;
+            m_AudioSource.loop = true;
+            m_AudioSource.Play();
+        }
+
+        public void StopSearching()
+        {
+            if (m_AudioSource != null && m_AudioSource.clip == m_SearchLoop)
+            {
+                m_AudioSource.Stop();
+                m_AudioSource.loop = false;
+            }
+        }
 
         public bool Interact()
         {
+            if (m_IsOpened) return false;
+            StopSearching(); // Stop the loop when finished
+
+            if (m_AudioSource != null && m_OpenSound != null)
+                m_AudioSource.PlayOneShot(m_OpenSound);
+
             if (m_IsOpened) return false;
 
             m_IsOpened = true;
